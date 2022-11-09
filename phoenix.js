@@ -46,7 +46,7 @@ require ( './shortcuts/music.js' );
 require ( './shortcuts/grow.js' );
 require ( './shortcuts/halves.js' );
 // require ( './shortcuts/pause.js' );
-require ( './shortcuts/quit.js' );
+// require ( './shortcuts/quit.js' );
 require ( './shortcuts/reload.js' );
 require ( './shortcuts/screens.js' );
 require ( './shortcuts/sides.js' );
