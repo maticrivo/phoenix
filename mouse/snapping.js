@@ -1,8 +1,8 @@
 
 /* SNAPPING */
 
-let isSnapping = false,
-    snappingFrame = {};
+let isSnapping = false;
+let snappingFrame = {};
 
 setEventHandler ( 'mouseDidLeftDrag', () => {
 
@@ -13,7 +13,6 @@ setEventHandler ( 'mouseDidLeftDrag', () => {
   if ( !window ) return;
 
   isSnapping = true;
-
   snappingFrame = window.frame ();
 
   setEventHandler ( 'mouseDidLeftClick', ({ x, y }) => {
@@ -30,7 +29,7 @@ setEventHandler ( 'mouseDidLeftDrag', () => {
 
     if ( frame.width !== snappingFrame.width || frame.height !== snappingFrame.height ) return;
 
-    const name = detectNamedAnchor ( x, y );
+    const name = detectNamedAnchor ( x, y, SNAPPING_THRESHOLD );
 
     if ( !name ) return;
 

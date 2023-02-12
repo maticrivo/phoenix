@@ -12,8 +12,8 @@ function setFrame ( x, y, width, height, window = Window.focused () ) {
 
     if ( !window ) return;
 
-    const screen = window.screen (),
-          frame = screen.flippedVisibleFrame ();
+    const screen = getWindowScreen ( window );
+    const frame = screen.flippedVisibleFrame ();
 
     window.setFrame ({
       x: frame.x + ( frame.width * x ),
