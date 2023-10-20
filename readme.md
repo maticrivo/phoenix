@@ -9,18 +9,18 @@ This configuration uses a remap of the Caps Lock key to something more useful: t
 
 1. Install [Phoenix](https://github.com/kasper/phoenix#install)
 2. Install [Karabiner Elements](https://github.com/tekezo/Karabiner-Elements) via its [dmg](https://pqrs.org/latest/karabiner-elements-latest.dmg)
-3. Replace Caps Lock with Hyper/F18 using [this](http://tinyurl.com/yc8m5qe8) Karabiner Elements configuration (if the link doesn't work copy and paste this in a browser: `karabiner://karabiner/assets/complex_modifications/import?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffabiospampinato%2Fphoenix%2Fmaster%2Fconfig%2Fkarabiner.json`)
+3. Replace Caps Lock with Hyper/F18 using this Karabiner Elements configuration: `karabiner://karabiner/assets/complex_modifications/import?url=https%3A%2F%2Fraw.githubusercontent.com%2Fmaticrivo%2Fphoenix%2Fmaster%2Fconfig%2Fkarabiner.json` (copy and paste this in a browser)
 4. `$ mkdir ~/.config`
 5. `$ cd ~/.config`
-6. `$ git clone git@github.com:fabiospampinato/phoenix.git`
+6. `$ git clone git@github.com:maticrivo/phoenix.git`
 7. Restart Phoenix
 8. Enjoy!
 
 ## Customization
 
-To disable specific features, just comment out their correspondent `require` call in [phoenix.js](https://github.com/fabiospampinato/phoenix/blob/master/phoenix.js).
+To disable specific features, just comment out their correspondent `require` call in [phoenix.js](https://github.com/maticrivo/phoenix/blob/master/phoenix.js).
 
-To tweak some numbers, simply edit [constants.js](https://github.com/fabiospampinato/phoenix/blob/master/config/constants.js).
+To tweak some numbers, simply edit [constants.js](https://github.com/maticrivo/phoenix/blob/master/config/constants.js).
 
 Changing the specific shortcut used to trigger an action is pretty trivial.
 
@@ -249,14 +249,14 @@ If it gets opened, positionate it to the right side.
 
 This is the truly great addition to what was already available on the internet.
 
-It combines [Phoenix](https://github.com/kasper/phoenix), [Alfred](https://www.alfredapp.com) and [alfred-spaces-workflow](https://github.com/fabiospampinato/alfred-spaces-workflow) into the space switcher macOS deserves but never had, always just a double Hyper (<kbd>⇪</kbd> <kbd>⇪</kbd>) away.
+It combines [Phoenix](https://github.com/kasper/phoenix), [Alfred](https://www.alfredapp.com) and [alfred-spaces-workflow](https://github.com/maticrivo/alfred-spaces-workflow) into the space switcher macOS deserves but never had, always just a double Hyper (<kbd>⇪</kbd> <kbd>⇪</kbd>) away.
 
 This is how it works:
 - It uses Phoenix to compile a list of your spaces
-- It tries to guess a name for those spaces, by default that would be the name of the folder opened in the Visual Studio Code instance present in that space ([get_space_name.js](https://github.com/fabiospampinato/phoenix/blob/master/helpers/get_space_name.js))
+- It tries to guess a name for those spaces, by default that would be the name of the folder opened in the Visual Studio Code instance present in that space ([get_space_name.js](https://github.com/maticrivo/phoenix/blob/master/helpers/get_space_name.js))
 - Refreshes the list and those guessed names when necessary
 - Listens for the double Hyper (<kbd>⇪</kbd> <kbd>⇪</kbd>) shortcut
-- Opens [Alfred](https://www.alfredapp.com) and triggers [alfred-spaces-workflow](https://github.com/fabiospampinato/alfred-spaces-workflow)
+- Opens [Alfred](https://www.alfredapp.com) and triggers [alfred-spaces-workflow](https://github.com/maticrivo/alfred-spaces-workflow)
 - Which reads the list of spaces compiled with Phoenix and displays it to you
 - Now just select a space to switch to
 
