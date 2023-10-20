@@ -1,70 +1,147 @@
 
-//TODO: This is a placeholder bare-bones implementation of a Spotlight-like input modal, but it can't be implemented because input modals are too buggy as of today
+/* HELPERS */
 
-// {
+const ICON_GRAY = Image.fromFile ( '~/.config/phoenix/icons/search_gray.png' );
+const ICON_GREEN = Image.fromFile ( '~/.config/phoenix/icons/search_green.png' );
+const ICON_YELLOW = Image.fromFile ( '~/.config/phoenix/icons/search_yellow.png' );
+const ICON_RED = Image.fromFile ( '~/.config/phoenix/icons/search_red.png' );
 
-//   const APPS = ['1Password', 'AetherSX2', 'Affinity Designer', 'Affinity Photo', 'App Store', 'Automator', 'Books', 'Calculator', 'Calendar', 'Chess', 'Color Picker', 'Contacts', 'Dictionary', 'Electron Fiddle', 'FaceTime', 'FindMy', 'Firefox', 'Font Book', 'Google Chrome', 'Home', 'Hyperkey', 'IINA', 'Image Capture', 'ImageOptim', 'Launchpad', 'Lingon X', 'logioptionsplus', 'Mail', 'Maps', 'Messages', 'Mission Control', 'MonitorControl', 'Music', 'News', 'Notable', 'Notes', 'OpenEmu', 'Parallels Desktop', 'Paw', 'Phoenix', 'Photo Booth', 'Photos', 'Podcasts', 'Preview', 'QuickTime Player', 'Reminders', 'Safari', 'Shortcuts', 'Siri', 'Steam', 'Stickies', 'Stocks', 'Sublime Text', 'System Preferences', 'TablePlus', 'TextEdit', 'The Unarchiver', 'Time Machine', 'TinkerTool', 'Tower', 'Transmission', 'Transmit', 'TV', 'Visual Studio Code', 'VoiceMemos', 'Xcode'];
+const STATE = {};
 
-//   function fuzzyMatch(needle, haystack) {
-//     if(needle === "" || haystack === "") return true;
-//     needle = needle.toLowerCase().replace(/ /g, "");
-//     haystack = haystack.toLowerCase();
-//     // All characters in needle must be present in haystack
-//     var j = 0; // haystack position
-//     for(var i = 0; i < needle.length; i++) {
-//         // Go down the haystack until we find the current needle character
-//         while(needle[i] !== haystack[j]) {
-//             j++;
-//             // If we reached the end of the haystack, then this is not a match
-//             if(j === haystack.length) {
-//                 return false;
-//             }
-//         }
-//         // Here, needle character is same as haystack character
-//         //console.log(needle + ":" + i + " === " + haystack + ":" + j);
-//     }
-//     // At this point, we have matched every single letter in the needle without returning false
-//     return true;
-//   }
+/* SPOTLIGHT */
 
-//   const modal = Modal.build ({
-//     origin: {
-//       x: 0,
-//       y: 0
-//     },
-//     weight: 25,
-//     // duration: MODAL_DURATION,
-//     animationDuration: .2,
-//     appearance: 'dark',
-//     text: 'Search...',
-//     isInput: true,
-//     icon: App.get ( 'Phoenix' ).icon (),
-//     textDidChange ( text ) {
-//       appendFile ( '/Users/fabio/Desktop/output.txt', `[${text}]\n` );
-//       const app = APPS.find ( app => fuzzyMatch ( text, app ) );
-//       appendFile ( '/Users/fabio/Desktop/output.txt', `${text} - ${app}\n` );
-//     }
-//   });
+//TODO: Document this in the readme
+//TODO: Improve ranking, with better search
 
-//   const onExit = () => {
-//     appendFile ( '/Users/fabio/Desktop/output.txt', `[CLOSING]\n` );
-//     modal.close ();
-//     Key.off ( onExitId );
-//     Key.off ( onEnterId );
-//   };
+const onToggle = () => {
 
-//   const onEnter = () => {
-//     appendFile ( '/Users/fabio/Desktop/output.txt', `[ENTERING]\n` );
-//     modal.close ();
-//     Key.off ( onExitId );
-//     Key.off ( onEnterId );
-//   };
+  if ( STATE.modal ) {
 
-//   const onExitId = Key.on ( 'escape', [], onExit );
-//   const onEnterId = Key.on ( 'return', [], onEnter );
+    onClose ();
 
-//   Key.on ( 'space', ['ctrl'], () => {
-//     modal.show ();
-//   });
+  } else {
 
-// }
+    onOpen ();
+
+  }
+
+};
+
+const onOpen = () => { //TODO: Maybe make an helper out of most of this
+
+  const screen = getFocusedScreen ();
+  const frame = screen.frame ();
+
+  STATE.time = Date.now ();
+  STATE.window = Window.focused ();
+
+  STATE.modal = Modal.build ({
+    weight: MODAL_WEIGHT,
+    animationDuration: MODAL_INPUT_ANIMATION_DURATION,
+    appearance: 'dark',
+    // inputPlaceholder: 'Search...',
+    isInput: true,
+    icon: ICON_GRAY,
+    origin ( mFrame ) {
+      return {
+        x: frame.x + ( frame.width / 2 ) - ( mFrame.width / 2 ),
+        y: frame.y + ( frame.height / 2 ) - ( mFrame.height / 2 )
+      };
+    },
+    textDidChange: onSearch
+  });
+
+  STATE.modal.show ();
+
+  STATE.onExitId = Key.on ( 'escape', [], onEscape );
+  STATE.onEnterId = Key.on ( 'return', [], onEnter );
+
+};
+
+const onClose = () => {
+
+  STATE.modal.close ();
+  STATE.modal = undefined;
+
+  STATE.apps = [];
+
+  STATE.window?.focus ();
+  STATE.window = undefined;
+
+  Key.off ( STATE.onExitId );
+  Key.off ( STATE.onEnterId );
+
+};
+
+const onBlur = () => { //FIXME: This event isn't fired after the first one, for some reason
+
+  if ( !STATE.modal ) return;
+
+  if ( STATE.time > ( Date.now () - 100 ) ) return;
+
+  onClose ();
+
+};
+
+const onSearch = query => {
+
+  if ( !query ) {
+
+    STATE.query = '';
+
+    STATE.apps = [];
+
+    STATE.modal.icon = ICON_GRAY;
+
+  } else {
+
+    const apps = STATE.query && STATE.apps && query.startsWith ( STATE.query ) ? STATE.apps : getApps (); // Narrowing down the search space with longer queries
+
+    STATE.query = query;
+
+    STATE.apps = apps.filter ( app => isMatch ( app.name, query, true ) );
+
+    if ( STATE.apps.length === 0 ) {
+
+      STATE.modal.icon = ICON_RED;
+
+    } else if ( STATE.apps.length === 1 ) {
+
+      STATE.modal.icon = ICON_GREEN;
+
+    } else {
+
+      STATE.modal.icon = ICON_YELLOW;
+
+    }
+
+  }
+
+};
+
+const onTrigger = () => {
+
+  const app = STATE.apps[0];
+
+  if ( !app ) return;
+
+  shell ( `open "${app.path}"` );
+
+};
+
+const onEscape = () => {
+
+  onClose ();
+
+};
+
+const onEnter = () => {
+
+  onTrigger ();
+  onClose ();
+
+};
+
+Key.on ( 'space', ['ctrl'], onToggle );
+
+setEventHandler ( 'windowDidFocus', onBlur);
