@@ -2,7 +2,7 @@
   "title": "Caps Lock -> Hyper/F18",
   "rules": [
     {
-      "description": "Remap Caps Lock to Hyper (ctrl + alt + cmd) if used in combination with other keys, otherwise map it to F18.",
+      "description": "Remap Caps Lock to Hyper (ctrl + alt + cmd) if used in combination with other keys, otherwise map it to Caps Lock.",
       "manipulators": [
         {
           "type": "basic",
@@ -25,7 +25,7 @@
           ],
           "to_if_alone": [
             {
-              "key_code": "f18"
+              "key_code": "caps_lock"
             }
           ]
         }
