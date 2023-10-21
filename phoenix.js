@@ -42,7 +42,7 @@ require ( './helpers/write_file.js' );
 require ( './helpers/write_json.js' );
 
 // require ( './shortcuts/brightness.js' );
-require ( './shortcuts/blacklist.js' );
+// require ( './shortcuts/blacklist.js' );
 require ( './shortcuts/center.js' );
 require ( './shortcuts/corners.js' );
 require ( './shortcuts/desktop_icons.js' );
@@ -59,7 +59,7 @@ require ( './shortcuts/sides.js' );
 require ( './shortcuts/spaces.js' );
 require ( './shortcuts/sixths.js' );
 require ( './shortcuts/split_view.js' );
-require ( './shortcuts/spotlight.js' );
+// require ( './shortcuts/spotlight.js' );
 require ( './shortcuts/thirds.js' );
 
 // require ( './mouse/snapping.js' );
