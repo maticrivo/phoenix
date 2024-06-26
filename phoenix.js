@@ -55,10 +55,10 @@ require ( './shortcuts/halves.js' );
 // require ( './shortcuts/pause.js' );
 // require ( './shortcuts/quit.js' );
 require ( './shortcuts/reload.js' );
+require ( './shortcuts/remap.js' );
 require ( './shortcuts/sides.js' );
 require ( './shortcuts/spaces.js' );
 require ( './shortcuts/sixths.js' );
-require ( './shortcuts/split_view.js' );
 // require ( './shortcuts/spotlight.js' );
 require ( './shortcuts/thirds.js' );
 
@@ -76,7 +76,7 @@ existsFiles ( SPACES_ALFRED_APPS, hasAlfred => {
 
   if ( !hasAlfred ) return;
 
-  require ( './spaces/alfred.js' );
+  // require ( './spaces/alfred.js' );
   require ( './spaces/list.js' );
   // require ( './spaces/overlay.js' );
 
